@@ -1,0 +1,26 @@
+/* src/components/AddUser.css */
+.add-user-container {
+  max-width: 500px;
+  margin: 40px auto;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.add-user-form .form-label {
+  font-weight: 500;
+}
+
+.add-user-form .btn {
+  font-size: 1rem;
+}
+
+.alert {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.alert:before {
+  content: "ℹ️ ";
+}
