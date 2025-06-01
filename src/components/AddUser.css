@@ -1,6 +1,7 @@
 /* src/components/AddUser.css */
 .add-user-container {
-  max-width: 500px;
+  /* max-width: 500px; */
+  width: auto;
   margin: 40px auto;
   background: #ffffff;
   padding: 30px;
@@ -23,4 +24,7 @@
 
 .alert:before {
   content: "ℹ️ ";
+}
+.form-control {
+  width: 100%;
 }

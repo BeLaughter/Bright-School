@@ -33,7 +33,7 @@ function Sidebar({ onLogout }) {
       <nav className="sidebar-nav">
         <button
           className="nav-link"
-          onClick={() => navigate("/adminDashboard")}
+          onClick={() => navigate("/")}
           style={{ background: "none", border: "none", cursor: "pointer" }}
         >
           <FaHome className="icon" />
@@ -41,7 +41,7 @@ function Sidebar({ onLogout }) {
         </button>
         <button
           className="nav-link"
-          onClick={() => navigate("/students")}
+          onClick={() => navigate("/")}
           style={{ background: "none", border: "none", cursor: "pointer" }}
         >
           <FaUserGraduate className="icon" />
@@ -49,7 +49,7 @@ function Sidebar({ onLogout }) {
         </button>
         <button
           className="nav-link"
-          onClick={() => navigate("/exams")}
+          onClick={() => navigate("#")}
           style={{ background: "none", border: "none", cursor: "pointer" }}
         >
           <FaBook className="icon" />
@@ -57,7 +57,7 @@ function Sidebar({ onLogout }) {
         </button>
         <button
           className="nav-link"
-          onClick={() => navigate("/reports")}
+          onClick={() => navigate("#")}
           style={{ background: "none", border: "none", cursor: "pointer" }}
         >
           <FaChartBar className="icon" />
@@ -65,7 +65,7 @@ function Sidebar({ onLogout }) {
         </button>
         <button
           className="nav-link"
-          onClick={() => navigate("/settings")}
+          onClick={() => navigate("/")}
           style={{ background: "none", border: "none", cursor: "pointer" }}
         >
           <FaCog className="icon" />

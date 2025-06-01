@@ -188,8 +188,12 @@ function Login({ onLogin }) {
             </form>
 
             <div className="login-footer">
-              <p>Forgot password? Contact your administrator</p>
-
+              <p>
+                <a href="#" target="blank">
+                  Forgot password?
+                </a>{" "}
+                Contact your administrator
+              </p>
               <p>© {new Date().getFullYear()} School Result System</p>
             </div>
           </div>
