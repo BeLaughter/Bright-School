@@ -1,7 +1,7 @@
 /* src/components/AddUser.css */
 .add-user-container {
   /* max-width: 500px; */
-  width: auto;
+  width: 100%;
   margin: 40px auto;
   background: #ffffff;
   padding: 30px;

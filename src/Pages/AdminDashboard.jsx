@@ -16,6 +16,7 @@ import {
   FaFilter,
   FaEdit,
   FaTrash,
+  FaSignOutAlt,
 } from "react-icons/fa";
 import Sidebar from "../components/Sidebar";
 import StudentCoursesModal from "../components/StudentCoursesModal";
@@ -38,10 +39,20 @@ function AdminDashboard({ onLogout }) {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        const adminRef = doc(db, "admins", currentUser.uid);
-        const docSnap = await getDoc(adminRef);
-        const fullName = docSnap.exists() ? docSnap.data().fullName : null;
-        setUser({ ...currentUser, fullName });
+        try {
+          const adminRef = doc(db, "admins", currentUser.uid);
+          const docSnap = await getDoc(adminRef);
+
+          if (docSnap.exists()) {
+            const fullName = docSnap.data().fullName || currentUser.email;
+            setUser({ ...currentUser, fullName });
+          } else {
+            setUser({ ...currentUser, fullName: currentUser.email });
+          }
+        } catch (error) {
+          console.error("Error fetching admin details:", error);
+          setUser({ ...currentUser, fullName: currentUser.email });
+        }
       }
     });
     return () => unsubscribe();
@@ -137,7 +148,8 @@ function AdminDashboard({ onLogout }) {
             >
               <FaFileExport /> Export Data
             </button>
-            <div className="view-toggle btn-group" role="group">
+
+            <div className="btn-group" role="group">
               <button
                 className={`btn btn-sm ${
                   currentView === "list"
@@ -159,15 +171,23 @@ function AdminDashboard({ onLogout }) {
                 Grid
               </button>
             </div>
-          </div>
-          <div className="header mt-3 text-dark">
-            {user && (
-              <div className="logged-in-user">
-                Welcome, <strong>{user.fullName || user.email}</strong>
-              </div>
-            )}
+
+            <button
+              className="btn btn-danger btn-sm d-flex align-items-center gap-2"
+              onClick={onLogout}
+              title="Logout"
+            >
+              <FaSignOutAlt /> Logout
+            </button>
           </div>
         </header>
+
+        {user && user.fullName && (
+          <div className="mb-3 fs-5 fw-semibold text-dark">
+            Welcome to Admin Dashboard,{" "}
+            <span className="text-primary text-uppercase">{user.fullName}</span>
+          </div>
+        )}
 
         <div className="controls d-flex align-items-center my-3 flex-wrap gap-3">
           <div className="input-group" style={{ maxWidth: 300 }}>
@@ -241,19 +261,19 @@ function AdminDashboard({ onLogout }) {
                     </td>
                     <td className="d-flex gap-2">
                       <button
-                        className="btn btn-outline-primary btn-sm d-flex justify-content-center align-items-center"
-                        title="Edit"
+                        className="btn btn-outline-primary btn-sm"
                         onClick={() => {
                           setSelectedStudent(student);
                           setIsCoursesModalOpen(true);
                         }}
+                        title="Edit"
                       >
                         <FaEdit />
                       </button>
                       <button
                         className="btn btn-outline-danger btn-sm"
-                        title="Delete"
                         onClick={() => handleDeleteStudent(student.id)}
+                        title="Delete"
                       >
                         <FaTrash />
                       </button>
@@ -273,16 +293,13 @@ function AdminDashboard({ onLogout }) {
                       {student.name}
                     </h5>
                     <div>
-                      <strong>Level:</strong>{" "}
-                      <span className="text-secondary">{student.level}</span>
+                      <strong>Level:</strong> {student.level}
                     </div>
                     <div>
-                      <strong>Email:</strong>{" "}
-                      <span className="text-muted">{student.email}</span>
+                      <strong>Email:</strong> {student.email}
                     </div>
                     <div>
-                      <strong>CGPA:</strong>{" "}
-                      <span className="text-info">{student.cgpa ?? "N/A"}</span>
+                      <strong>CGPA:</strong> {student.cgpa ?? "N/A"}
                     </div>
                     <div>
                       <strong>Status:</strong>{" "}

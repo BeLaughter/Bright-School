@@ -49,6 +49,13 @@ function StudentCoursesModal({ isOpen, onClose, student }) {
     setCourses(updated);
   };
 
+  const handleLevelChange = (e) => {
+    setStudentInfo((prev) => ({
+      ...prev,
+      level: e.target.value,
+    }));
+  };
+
   const calculateCGPA = () => {
     if (courses.length === 0) return 0;
     const totalScore = courses.reduce(
@@ -71,10 +78,15 @@ function StudentCoursesModal({ isOpen, onClose, student }) {
       });
 
       const newCGPA = calculateCGPA();
-      batch.update(studentRef, { cgpa: newCGPA });
+
+      // Update both CGPA and level
+      batch.update(studentRef, {
+        cgpa: newCGPA,
+        level: studentInfo.level,
+      });
 
       await batch.commit();
-      alert("Courses and CGPA updated successfully.");
+      alert("Courses and student level updated successfully.");
       onClose();
     } catch (err) {
       console.error("Save error:", err);
@@ -92,20 +104,36 @@ function StudentCoursesModal({ isOpen, onClose, student }) {
 
       <Modal.Body>
         <h5 className="mb-3">Student Details</h5>
-        <Row>
-          <Col md={6}>
-            <strong>Name:</strong> {studentInfo.name}
-          </Col>
-          <Col md={6}>
-            <strong>Level:</strong> {studentInfo.level}
-          </Col>
-          <Col md={6}>
-            <strong>CGPA:</strong> {calculateCGPA()}
-          </Col>
-          <Col md={6}>
-            <strong>Email:</strong> {studentInfo.email}
-          </Col>
-        </Row>
+        <Form>
+          <Row>
+            <Col md={6}>
+              <strong>Name:</strong> {studentInfo.name}
+            </Col>
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>
+                  <strong>Level</strong>
+                </Form.Label>
+                <Form.Select
+                  value={studentInfo.level}
+                  onChange={handleLevelChange}
+                >
+                  <option value="">Select Level</option>
+                  <option value="100">100</option>
+                  <option value="200">200</option>
+                  <option value="300">300</option>
+                  <option value="400">400</option>
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <strong>CGPA:</strong> {calculateCGPA()}
+            </Col>
+            <Col md={6}>
+              <strong>Email:</strong> {studentInfo.email}
+            </Col>
+          </Row>
+        </Form>
 
         <hr />
 
