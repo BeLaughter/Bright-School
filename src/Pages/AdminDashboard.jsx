@@ -62,20 +62,32 @@ function AdminDashboard({ onLogout }) {
     loadStudents();
   }, []);
 
+  // Updated loadStudents to fetch fullName from /users/{studentId}
   const loadStudents = async () => {
     setIsLoading(true);
     try {
-      const snapshot = await getDocs(collection(db, "students"));
-      const studentsData = snapshot.docs.map((docSnap) => {
-        const studentData = docSnap.data();
-        let email = studentData.email || "No Email";
-        return {
-          id: docSnap.id,
-          ...studentData,
-          email,
-          status: studentData.status || "active",
-        };
-      });
+      const studentsSnapshot = await getDocs(collection(db, "students"));
+
+      const studentsData = await Promise.all(
+        studentsSnapshot.docs.map(async (docSnap) => {
+          const studentId = docSnap.id;
+          const studentData = docSnap.data();
+
+          // Fetch user document to get fullName
+          const userDoc = await getDoc(doc(db, "users", studentId));
+          const fullName = userDoc.exists()
+            ? userDoc.data().fullName
+            : studentData.name || "No Name";
+
+          return {
+            id: studentId,
+            ...studentData,
+            name: fullName, // overwrite or set name to fullName
+            email: studentData.email || "No Email",
+            status: studentData.status || "active",
+          };
+        })
+      );
 
       const sortedStudents = studentsData.sort((a, b) =>
         a.name.localeCompare(b.name)
@@ -339,14 +351,12 @@ function AdminDashboard({ onLogout }) {
           </div>
         )}
 
-        <StudentCoursesModal
-          isOpen={isCoursesModalOpen}
-          onClose={() => {
-            setIsCoursesModalOpen(false);
-            setSelectedStudent(null);
-          }}
-          student={selectedStudent}
-        />
+        {isCoursesModalOpen && selectedStudent && (
+          <StudentCoursesModal
+            student={selectedStudent}
+            onClose={() => setIsCoursesModalOpen(false)}
+          />
+        )}
       </main>
     </div>
   );
