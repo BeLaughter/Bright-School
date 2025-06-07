@@ -185,7 +185,7 @@ function AdminDashboard({ onLogout }) {
             </div>
 
             <button
-              className="btn btn-danger btn-sm d-flex align-items-center gap-2"
+              className="btn btn-danger  d-flex align-items-center gap-2"
               onClick={onLogout}
               title="Logout"
             >
@@ -204,7 +204,7 @@ function AdminDashboard({ onLogout }) {
         <div className="controls d-flex align-items-center my-3 flex-wrap gap-3">
           <div className="input-group" style={{ maxWidth: 300 }}>
             <span className="input-group-text">
-              <FaSearch />
+              <FaSearch className="icn" />
             </span>
             <input
               type="text"
@@ -216,7 +216,7 @@ function AdminDashboard({ onLogout }) {
           </div>
           <div className="filter input-group" style={{ maxWidth: 150 }}>
             <span className="input-group-text">
-              <FaFilter />
+              <FaFilter className="icn" />
             </span>
             <select
               className="form-select"

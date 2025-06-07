@@ -167,7 +167,17 @@
   gap: 10px;
   flex-wrap: wrap;
 }
-
+.input-group-text {
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+  margin-right: 5px;
+}
+.icn {
+  width: 35px;
+  height: 35px;
+  color: #3a0ca3;
+}
 .btn-view {
   background-color: transparent;
   border: 1px solid #4361ee;
