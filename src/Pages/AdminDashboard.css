@@ -257,3 +257,8 @@
 .export-options button {
   white-space: nowrap;
 }
+@media screen and (max-width: 755px) {
+  button {
+    width: 100%;
+  }
+}
