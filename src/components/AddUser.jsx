@@ -58,7 +58,6 @@ function AddUser() {
   return (
     <div className="login-page">
       <div className="login-container">
-        {" "}
         <div className="login-left">
           <div className="login-brand">
             <img src={schoolLogo} alt="School Logo" className="logo" />
