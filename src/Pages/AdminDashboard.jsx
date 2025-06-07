@@ -350,13 +350,14 @@ function AdminDashboard({ onLogout }) {
             ))}
           </div>
         )}
-
-        {isCoursesModalOpen && selectedStudent && (
-          <StudentCoursesModal
-            student={selectedStudent}
-            onClose={() => setIsCoursesModalOpen(false)}
-          />
-        )}
+        <StudentCoursesModal
+          isOpen={isCoursesModalOpen}
+          onClose={() => {
+            setIsCoursesModalOpen(false);
+            setSelectedStudent(null);
+          }}
+          student={selectedStudent}
+        />
       </main>
     </div>
   );
