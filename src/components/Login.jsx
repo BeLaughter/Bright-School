@@ -160,6 +160,7 @@ function Login({ onLogin }) {
                     <input
                       type="password"
                       id="password"
+                      autocomplete="current-password"
                       value={formData.password}
                       onChange={(e) =>
                         setFormData({ ...formData, password: e.target.value })

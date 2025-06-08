@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
   collection,
@@ -62,7 +62,7 @@ function AdminDashboard({ onLogout }) {
     loadStudents();
   }, []);
 
-  // Updated loadStudents to fetch fullName from /users/{studentId}
+  // Fetch students with their fullName from users collection
   const loadStudents = async () => {
     setIsLoading(true);
     try {
@@ -73,7 +73,7 @@ function AdminDashboard({ onLogout }) {
           const studentId = docSnap.id;
           const studentData = docSnap.data();
 
-          // Fetch user document to get fullName
+          // Get fullName from /users/{studentId} if available
           const userDoc = await getDoc(doc(db, "users", studentId));
           const fullName = userDoc.exists()
             ? userDoc.data().fullName
@@ -82,13 +82,14 @@ function AdminDashboard({ onLogout }) {
           return {
             id: studentId,
             ...studentData,
-            name: fullName, // overwrite or set name to fullName
+            name: fullName,
             email: studentData.email || "No Email",
             status: studentData.status || "active",
           };
         })
       );
 
+      // Sort alphabetically by name
       const sortedStudents = studentsData.sort((a, b) =>
         a.name.localeCompare(b.name)
       );
@@ -101,6 +102,7 @@ function AdminDashboard({ onLogout }) {
     }
   };
 
+  // Filter students by level and search term
   const filteredStudents = students.filter((student) => {
     const matchesLevel = filterLevel === "All" || student.level === filterLevel;
     const searchLower = searchTerm.toLowerCase();
@@ -113,6 +115,7 @@ function AdminDashboard({ onLogout }) {
 
   const levelOptions = ["All", ...new Set(students.map((s) => s.level))];
 
+  // Delete student handler
   const handleDeleteStudent = async (id) => {
     if (window.confirm("Are you sure you want to delete this student?")) {
       try {
@@ -125,6 +128,7 @@ function AdminDashboard({ onLogout }) {
     }
   };
 
+  // Toggle active/inactive status
   const toggleStatus = async (id) => {
     try {
       const student = students.find((s) => s.id === id);
@@ -185,7 +189,7 @@ function AdminDashboard({ onLogout }) {
             </div>
 
             <button
-              className="btn btn-danger  d-flex align-items-center gap-2"
+              className="btn btn-danger d-flex align-items-center gap-2"
               onClick={onLogout}
               title="Logout"
             >
@@ -286,6 +290,7 @@ function AdminDashboard({ onLogout }) {
                         className="btn btn-outline-danger btn-sm"
                         onClick={() => handleDeleteStudent(student.id)}
                         title="Delete"
+                        aria-label={`Delete ${student.name}`}
                       >
                         <FaTrash />
                       </button>
@@ -340,6 +345,7 @@ function AdminDashboard({ onLogout }) {
                         className="btn btn-outline-danger btn-sm"
                         onClick={() => handleDeleteStudent(student.id)}
                         title="Delete"
+                        aria-label={`Delete ${student.name}`}
                       >
                         <FaTrash />
                       </button>
@@ -350,6 +356,7 @@ function AdminDashboard({ onLogout }) {
             ))}
           </div>
         )}
+
         <StudentCoursesModal
           isOpen={isCoursesModalOpen}
           onClose={() => {
