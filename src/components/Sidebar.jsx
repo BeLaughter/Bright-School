@@ -8,7 +8,7 @@ import {
   FaCog,
   FaSignOutAlt,
 } from "react-icons/fa";
-import logo from "../assets/logo.webp"; // Adjust path if needed
+import logo from "../assets/logo1.jpg"; // Adjust path if needed
 
 function Sidebar({ onLogout }) {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ function Sidebar({ onLogout }) {
       <div className="sidebar-header">
         <img src={logo} alt="Bright Future Logo" className="sidebar-img" />
         <div>
-          <h2>Bright Future</h2>
+          <h2>Bright Institute Of Learning</h2>
           <p>Admin Panel</p>
         </div>
       </div>

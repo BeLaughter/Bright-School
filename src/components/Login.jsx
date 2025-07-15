@@ -8,7 +8,7 @@ import {
   FaUserGraduate,
 } from "react-icons/fa";
 import "./Login.css";
-import schoolLogo from "../assets/logo.webp";
+import schoolLogo from "../assets/logo1.jpg";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../firebase"; // make sure auth and db are correctly exported
@@ -86,7 +86,7 @@ function Login({ onLogin }) {
         <div className="login-left">
           <div className="login-brand">
             <img src={schoolLogo} alt="School Logo" className="logo" />
-            <h1>Bright Future Academy</h1>
+            <h1>Bright Institute Of Learning</h1>
             <p>Result Management System</p>
           </div>
           <div className="login-illustration">
