@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  collection,
-  getDocs,
-  updateDoc,
-  doc,
-  writeBatch,
-} from "firebase/firestore";
+import { collection, getDocs, doc, writeBatch } from "firebase/firestore";
 import { db } from "../firebase";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 
@@ -20,6 +14,7 @@ function StudentCoursesModal({ isOpen, onClose, student }) {
       setStudentInfo({
         name: student.name || "",
         level: student.level || "",
+        program: student.program || "", // ✅ fetched from Firestore
         cgpa: student.cgpa || 0,
         email: student.email || "",
       });
@@ -72,6 +67,7 @@ function StudentCoursesModal({ isOpen, onClose, student }) {
       const batch = writeBatch(db);
       const studentRef = doc(db, "students", student.id);
 
+      // update course scores
       courses.forEach((course) => {
         const courseRef = doc(db, "students", student.id, "courses", course.id);
         batch.update(courseRef, { score: course.score });
@@ -79,7 +75,7 @@ function StudentCoursesModal({ isOpen, onClose, student }) {
 
       const newCGPA = calculateCGPA();
 
-      // Update both CGPA and level
+      // ✅ only update CGPA & level (program stays fixed)
       batch.update(studentRef, {
         cgpa: newCGPA,
         level: studentInfo.level,
@@ -109,6 +105,13 @@ function StudentCoursesModal({ isOpen, onClose, student }) {
             <Col md={6}>
               <strong>Name:</strong> {studentInfo.name}
             </Col>
+
+            {/* ✅ Program is read-only */}
+            <Col md={6}>
+              <strong>Program:</strong> {studentInfo.program}
+            </Col>
+
+            {/* Level selector */}
             <Col md={6}>
               <Form.Group>
                 <Form.Label>
@@ -126,9 +129,11 @@ function StudentCoursesModal({ isOpen, onClose, student }) {
                 </Form.Select>
               </Form.Group>
             </Col>
+
             <Col md={6}>
               <strong>CGPA:</strong> {calculateCGPA()}
             </Col>
+
             <Col md={6}>
               <strong>Email:</strong> {studentInfo.email}
             </Col>

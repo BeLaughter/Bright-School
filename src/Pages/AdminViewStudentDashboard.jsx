@@ -9,19 +9,18 @@ function AdminViewStudentDashboard() {
   const [student, setStudent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [editCourses, setEditCourses] = useState([]);
-  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState(null);
 
   useEffect(() => {
     const fetchStudent = async () => {
-      setIsLoading(true);
-      setError(null);
       try {
-        const studentRef = doc(db, "students", id);
-        const studentSnap = await getDoc(studentRef);
-        if (studentSnap.exists()) {
-          const data = studentSnap.data();
+        const docRef = doc(db, "students", id);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
           setStudent(data);
           // Prepare editable courses state with scores as strings
           setEditCourses(

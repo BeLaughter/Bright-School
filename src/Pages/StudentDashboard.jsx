@@ -24,6 +24,7 @@ const StudentDashboard = () => {
   const courseCodeRef = useRef();
   const courseTitleRef = useRef();
 
+  // ✅ CGPA calculation (5-point scale)
   const calculateCGPA = (courseList) => {
     if (courseList.length === 0) return 0.0;
     const total = courseList.reduce(
@@ -35,18 +36,20 @@ const StudentDashboard = () => {
 
   const fetchStudentData = async (user) => {
     try {
+      // ✅ Use UID as student doc ID
       const studentRef = doc(db, "students", user.uid);
       const studentSnap = await getDoc(studentRef);
 
       if (!studentSnap.exists()) {
-        // Create new student doc with email included
+        // ✅ Create default profile if missing
         const defaultProfile = {
           name: user.displayName || user.email?.split("@")[0] || "New Student",
-          email: user.email || "", // <-- Save email here
-          course: "Computer Engineering",
+          email: user.email,
+          program: "ND",
           level: "100",
+          course: "Computer Engineering",
           cgpa: 0.0,
-          status: "active", // Default status
+          status: "active",
         };
         await setDoc(studentRef, defaultProfile);
         setStudentInfo(defaultProfile);
@@ -56,28 +59,27 @@ const StudentDashboard = () => {
 
       const profileData = studentSnap.data();
 
-      // Update profile if any required fields including email are missing
-      if (
-        !profileData.name ||
-        !profileData.course ||
-        !profileData.status ||
-        !profileData.email // <-- check email presence
-      ) {
-        const updatedProfile = {
-          ...profileData,
-          name:
-            profileData.name ||
-            user.displayName ||
-            user.email?.split("@")[0] ||
-            "New Student",
-          email: profileData.email || user.email || "", // <-- update email if missing
-          course: profileData.course || "Computer Engineering",
-          status: profileData.status || "active",
-        };
-        await setDoc(studentRef, updatedProfile);
-        Object.assign(profileData, updatedProfile);
-      }
+      // ✅ Fill in missing fields
+      const updatedProfile = {
+        ...profileData,
+        name:
+          profileData.name ||
+          user.displayName ||
+          user.email?.split("@")[0] ||
+          "New Student",
+        email: profileData.email || user.email,
+        program: profileData.program || "ND",
+        level:
+          profileData.level || (profileData.program === "HND" ? "300" : "100"),
+        course: profileData.course || "Computer Engineering",
+        status: profileData.status || "active",
+        cgpa: profileData.cgpa ?? 0.0,
+      };
 
+      // ✅ Save merged profile
+      await setDoc(studentRef, updatedProfile, { merge: true });
+
+      // ✅ Fetch courses
       const coursesRef = collection(db, "students", user.uid, "courses");
       const courseSnap = await getDocs(coursesRef);
       const courseList = courseSnap.docs.map((doc) => ({
@@ -85,13 +87,14 @@ const StudentDashboard = () => {
         ...doc.data(),
       }));
 
+      // ✅ Recalculate CGPA
       const cgpa = calculateCGPA(courseList);
-      if (profileData.cgpa !== cgpa) {
-        await setDoc(studentRef, { ...profileData, cgpa });
-        profileData.cgpa = cgpa;
+      if (updatedProfile.cgpa !== cgpa) {
+        await setDoc(studentRef, { ...updatedProfile, cgpa }, { merge: true });
+        updatedProfile.cgpa = cgpa;
       }
 
-      setStudentInfo(profileData);
+      setStudentInfo(updatedProfile);
       setCourses(courseList);
     } catch (error) {
       console.error("Error fetching student data:", error);
@@ -124,6 +127,7 @@ const StudentDashboard = () => {
     }
   }, [noStudentData, navigate]);
 
+  // ✅ Add new course
   const handleAddCourse = async (e) => {
     e.preventDefault();
     const code = courseCodeRef.current.value.trim();
@@ -175,6 +179,7 @@ const StudentDashboard = () => {
           </button>
         </div>
 
+        {/* ✅ Student profile card */}
         <div className="card p-3 mb-4 shadow-sm">
           <div className="d-flex align-items-center mb-3">
             <FaUserGraduate
@@ -196,7 +201,13 @@ const StudentDashboard = () => {
             <strong>Name:</strong> {studentInfo.name}
           </p>
           <p>
+            <strong>Email:</strong> {studentInfo.email}
+          </p>
+          <p>
             <strong>Course:</strong> {studentInfo.course}
+          </p>
+          <p>
+            <strong>Program:</strong> {studentInfo.program}
           </p>
           <p>
             <strong>Level:</strong> {studentInfo.level}
@@ -204,11 +215,9 @@ const StudentDashboard = () => {
           <p>
             <strong>CGPA:</strong> {studentInfo.cgpa}
           </p>
-          <p>
-            <strong>Email:</strong> {studentInfo.email}
-          </p>
         </div>
 
+        {/* ✅ Add course form */}
         <form onSubmit={handleAddCourse} className="card p-3 mb-4 shadow-sm">
           <h4 className="mb-3">Add New Course</h4>
           <input
@@ -228,6 +237,7 @@ const StudentDashboard = () => {
           </button>
         </form>
 
+        {/* ✅ Courses list */}
         <h4 className="mb-3">Courses Completed</h4>
         {courses.length === 0 ? (
           <p>No courses found.</p>
