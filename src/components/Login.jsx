@@ -86,7 +86,7 @@ function Login({ onLogin }) {
         <div className="login-left">
           <div className="login-brand">
             <img src={schoolLogo} alt="School Logo" className="logo" />
-            <h1>Bright Institute Of Learning</h1>
+            <h1>Abraham Adesanya Polytechnic</h1>
             <p>Result Management System</p>
           </div>
           <div className="login-illustration">
