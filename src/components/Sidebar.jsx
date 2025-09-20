@@ -25,7 +25,7 @@ function Sidebar({ onLogout }) {
       <div className="sidebar-header">
         <img src={logo} alt="Bright Future Logo" className="sidebar-img" />
         <div>
-          <h2>Bright Institute Of Learning</h2>
+          <h2>Abraham Adesanya Polytechnic</h2>
           <p>Admin Panel</p>
         </div>
       </div>

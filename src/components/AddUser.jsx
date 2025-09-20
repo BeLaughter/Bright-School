@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 
-import schoolLogo from "../assets/logo.webp";
+import schoolLogo from "../assets/logo1.jpg";
 import { auth, db } from "../firebase";
 import "./AddUser.css";
 
@@ -86,7 +86,7 @@ function AddUser() {
         <div className="login-left">
           <div className="login-brand">
             <img src={schoolLogo} alt="School Logo" className="logo" />
-            <h1>Bright Future Academy</h1>
+            <h1>Abraham Adesanya Polytechnic</h1>
             <p>Result Management System</p>
           </div>
           <div className="login-illustration">
